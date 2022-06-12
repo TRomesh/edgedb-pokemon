@@ -1,4 +1,7 @@
 module default {
+
+    scalar type Result extending enum<Won, Lost, Tie>;
+
     type Pokemon {
         required property name -> str;
         required property description -> str;
@@ -7,8 +10,8 @@ module default {
     }
 
     type Battle {
-         link contender -> Pokemon;
-         link opponent -> Pokemon;
-         property result -> str;
+        property result -> Result;
+        required link contender -> Pokemon;
+        required link opponent -> Pokemon;
     }
 }

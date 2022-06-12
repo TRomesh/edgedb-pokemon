@@ -22,7 +22,6 @@ app.get("/pokemons", async (_req: Request, res: Response) => {
       height: true,
       weight: true,
     }));
-
     const result = await query.run(client);
     res.status(200).send(result);
   } catch (error) {
@@ -37,9 +36,8 @@ app.get("/battles", async (_req: Request, res: Response) => {
       id: true,
       contender: { name: true },
       opponent: { name: true },
-      filter: e.op(battle.result, "=", "won"),
+      result: true,
     }));
-
     const result = await query.run(client);
     res.status(200).send(result);
   } catch (error) {
@@ -50,7 +48,6 @@ app.get("/battles", async (_req: Request, res: Response) => {
 
 app.post("/pokemon", async (req: Request, res: Response) => {
   try {
-    console.log("req.body", req.body);
     const query = e.insert(e.Pokemon, {
       name: req.body.name,
       description: req.body.description,
@@ -65,9 +62,19 @@ app.post("/pokemon", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/battles", async (_req: Request, res: Response) => {
+app.post("/battle", async (req: Request, res: Response) => {
   try {
-    res.status(200).send({});
+    const query = e.insert(e.Battle, {
+      contender: e.select(e.Pokemon, (pokemon) => ({
+        filter: e.op(pokemon.id, "=", e.uuid(req.body.contender_id)),
+      })),
+      opponent: e.select(e.Pokemon, (pokemon) => ({
+        filter: e.op(pokemon.id, "=", e.uuid(req.body.opponent_id)),
+      })),
+      result: req.body.result,
+    });
+    const result = await query.run(client);
+    res.status(200).send(result);
   } catch (error) {
     console.error(error);
     res.status(500).send(error);

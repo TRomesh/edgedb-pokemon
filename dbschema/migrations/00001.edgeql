@@ -1,4 +1,4 @@
-CREATE MIGRATION m1rrwbzser5ckgjo3uzpmz726a3y6omc7tcme4mk36ec6gihds64ga
+CREATE MIGRATION m1vbrrpio2d7yeyj4gudqkopqdd6rltyyqhr2wbyrj6fewjjti4gqq
     ONTO initial
 {
   CREATE TYPE default::Pokemon {
@@ -7,9 +7,10 @@ CREATE MIGRATION m1rrwbzser5ckgjo3uzpmz726a3y6omc7tcme4mk36ec6gihds64ga
       CREATE REQUIRED PROPERTY name -> std::str;
       CREATE PROPERTY weight -> std::int64;
   };
+  CREATE SCALAR TYPE default::Result EXTENDING enum<Won, Lost, Tie>;
   CREATE TYPE default::Battle {
-      CREATE LINK contender -> default::Pokemon;
-      CREATE LINK opponent -> default::Pokemon;
-      CREATE PROPERTY result -> std::str;
+      CREATE REQUIRED LINK contender -> default::Pokemon;
+      CREATE REQUIRED LINK opponent -> default::Pokemon;
+      CREATE PROPERTY result -> default::Result;
   };
 };
