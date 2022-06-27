@@ -49,4 +49,4 @@ $ npm install
 $ npm run dev
 ```
 
-You can test the REST API using Postman or CURL
+You can test the REST API using Postman or CURL on http://localhost:3000 (default url)
